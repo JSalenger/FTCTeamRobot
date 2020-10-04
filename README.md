@@ -1,5 +1,5 @@
 [![license](https://badgen.net/badge/license/Unlicense/blue)]()
-[![jsalenger](https://circleci.com/gh/JSalenger/FTC13270-2020.svg?style=svg)](https://app.circleci.com/pipelines/github/JSalenger/FTC13270-2020)
+[![jsalenger](https://circleci.com/gh/JSalenger/FTCTeamRobot.svg?style=svg)](https://app.circleci.com/pipelines/github/JSalenger/FTC13270-2020)
 ## Getting Started
 https://jbsalenger.gitbook.io/teamrobot/
 
