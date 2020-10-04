@@ -35,7 +35,7 @@ public class TestObjectRecognition extends LinearOpMode {
 
             telemetry.addData("Number of objects recognized: ", (recognitions.size() + ""));
 
-            recognitions.forEach(recognition -> {
+            for (Recognition recognition : recognitions) {
                 telemetry.addData("Found: ", recognition.getLabel());
                 telemetry.addData("- Confidence: ", (recognition.getConfidence() + ""));
                 telemetry.addData("- Distance from L,R,T,B: ", (
@@ -44,7 +44,10 @@ public class TestObjectRecognition extends LinearOpMode {
                                 recognition.getTop() + ", " +
                                 recognition.getBottom() + "."
                 ));
-            });
+            }
+
+            telemetry.update();
+
         }
     }
 

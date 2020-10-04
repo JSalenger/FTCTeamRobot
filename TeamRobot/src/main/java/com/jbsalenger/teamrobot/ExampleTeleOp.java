@@ -40,17 +40,17 @@ public class ExampleTeleOp extends LinearOpMode {
 
         telemetry.addData("Number of objects recognized: ", (recognitions.size() + ""));
 
-        recognitions.forEach(recognition -> {
+        for (Recognition recognition : recognitions) {
             telemetry.addData("Found: ", recognition.getLabel());
             telemetry.addData("- Confidence: ", (recognition.getConfidence() + ""));
             telemetry.addData("- Distance from L,R,T,B: ", (
                     recognition.getLeft() + ", " +
-                    recognition.getRight() + ", " +
-                    recognition.getTop() + ", " +
-                    recognition.getBottom() + "."
-                ));
-        });
-        
+                            recognition.getRight() + ", " +
+                            recognition.getTop() + ", " +
+                            recognition.getBottom() + "."
+            ));
+        }
+
         telemetry.update();
         robot.turnOnBackCenter(HorizontalDirection.LEFT, 200, 1);
     }

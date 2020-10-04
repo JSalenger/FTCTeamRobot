@@ -1,5 +1,6 @@
 package com.jbsalenger.teamrobot.robot;
 
+import com.jbsalenger.teamrobot.robot.motors.Motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -17,10 +18,10 @@ import java.util.Arrays;
 public class TeamRobot {
 
     // TODO: ADD JAVADOC COMMENTS TO METHODS AND CLASS
-    ArrayList<REVMotor> wheels = new ArrayList<>();
+    ArrayList<Motor> wheels = new ArrayList<>();
     RobotVision robotVision;
 
-    public TeamRobot(HardwareMap hMap, String KEY, String TFOD_MODEL_ASSET_PATH, String[] LABELS, REVMotor... _wheels) {
+    public TeamRobot(HardwareMap hMap, String KEY, String TFOD_MODEL_ASSET_PATH, String[] LABELS, Motor... _wheels) {
         /**
          * Constructor:
          * @param hMap hardware map from OpMode
@@ -60,35 +61,35 @@ public class TeamRobot {
 
     // TODO: ADD ONE FINAL CONSTRUCTOR THAT USES THE TF DEFAULTS FOR THE ULTIMATE GOAL SEASON
 
-    private void waitForMotor(REVMotor m) {
+    private void waitForMotor(Motor m) {
         while(m.getTicker().getIsBusy()){}
 
         return;
     }
 
     public void driveStraight(int ticks, double power) {
-        wheels.forEach(wheel -> {
-            wheel.set(power);
+        for (Motor wheel : wheels) {
             wheel.getTicker().setTargetPos(ticks);
             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-        });
+            wheel.set(power);
+        }
 
         // TODO: TEST THAT THIS IS STABLE THIS IS NOT HOW THE LIBRARY IS MEANT TO BE USED
         // TEST IF THIS FAILS TEST THE CONDITION WITHOUT THE !
         //Awaitility.await().until(() -> !(wheels.get(0).getTicker().getIsBusy()));
         waitForMotor(wheels.get(0));
 
-        wheels.forEach(wheel -> {
+        for (Motor wheel : wheels) {
             wheel.stopMotor();
             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        });
+        }
     }
 
     public void driveHorizontal(HorizontalDirection hDirection, int ticks, double power) {
         // https://www.roboteq.com/images/article-images/frontpage/wheel-rotations.jpg
         switch(hDirection) {
             case LEFT:
-                wheels.forEach(wheel -> {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_RIGHT:
@@ -101,9 +102,9 @@ public class TeamRobot {
                             wheel.getTicker().setTargetPos(ticks);
                             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
                     }
-                });
+                }
             case RIGHT:
-                wheels.forEach(wheel ->  {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_RIGHT:
@@ -116,16 +117,16 @@ public class TeamRobot {
                             wheel.getTicker().setTargetPos(ticks);
                             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
                     }
-                });
+                }
         }
 
         //Awaitility.await().until(() -> !(wheels.get(0).getTicker().getIsBusy()));
-        while(wheels.get(0).getTicker().getIsBusy()) {}
+        waitForMotor(wheels.get(0));
 
-        wheels.forEach(wheel -> {
+        for (Motor wheel : wheels) {
             wheel.stopMotor();
             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        });
+        }
 
     }
 
@@ -133,11 +134,11 @@ public class TeamRobot {
         // https://www.roboteq.com/images/article-images/frontpage/wheel-rotations.jpg
         switch(tDirection) {
             case LEFT:
-                wheels.forEach(wheel -> {
-                    switch(wheel.getWheelType()) {
+                for (Motor wheel : wheels) {
+                    switch (wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_LEFT:
-                            wheel.set(power*-1);
+                            wheel.set(power * -1);
                             wheel.getTicker().setTargetPos(ticks);
                             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
                         case FRONT_RIGHT:
@@ -146,9 +147,9 @@ public class TeamRobot {
                             wheel.getTicker().setTargetPos(ticks);
                             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
                     }
-                });
+                }
             case RIGHT:
-                wheels.forEach(wheel ->  {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_LEFT:
@@ -161,15 +162,15 @@ public class TeamRobot {
                             wheel.getTicker().setTargetPos(ticks);
                             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
                     }
-                });
+                }
         }
 
         waitForMotor(wheels.get(0));
 
-        wheels.forEach(wheel -> {
+        for (Motor wheel : wheels) {
             wheel.stopMotor();
             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        });
+        }
 
     }
 
@@ -177,7 +178,7 @@ public class TeamRobot {
         // https://www.roboteq.com/images/article-images/frontpage/wheel-rotations.jpg
         switch(corner) {
             case FRONT_LEFT_CORNER:
-                wheels.forEach(wheel -> {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_LEFT:
@@ -189,9 +190,9 @@ public class TeamRobot {
                             wheel.getTicker().setTargetPos(ticks);
                             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
                     }
-                });
+                }
             case BACK_LEFT_CORNER:
-                wheels.forEach(wheel -> {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_LEFT:
@@ -203,9 +204,9 @@ public class TeamRobot {
                             wheel.getTicker().setTargetPos(ticks);
                             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
                     }
-                });
+                }
             case FRONT_RIGHT_CORNER:
-                wheels.forEach(wheel ->  {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_LEFT:
@@ -217,9 +218,9 @@ public class TeamRobot {
                             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                             wheel.set(0);
                     }
-                });
+                }
             case BACK_RIGHT_CORNER:
-                wheels.forEach(wheel ->  {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_LEFT:
@@ -231,24 +232,23 @@ public class TeamRobot {
                             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                             wheel.set(0);
                     }
-                });
+                }
         }
 
         waitForMotor(wheels.get(0));
 
-        wheels.forEach(wheel -> {
+        for (Motor wheel : wheels) {
             wheel.stopMotor();
             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        });
-
+        }
     }
 
     public void turnOnBackCenter(HorizontalDirection tDirection, int ticks, double power) {
         // https://www.roboteq.com/images/article-images/frontpage/wheel-rotations.jpg
         switch(tDirection) {
             case LEFT:
-                wheels.forEach(wheel -> {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                             wheel.set(power*-1);
@@ -263,9 +263,9 @@ public class TeamRobot {
                             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                             wheel.set(0);
                     }
-                });
+                }
             case RIGHT:
-                wheels.forEach(wheel ->  {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                             wheel.set(power);
@@ -280,16 +280,16 @@ public class TeamRobot {
                             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                             wheel.set(0);
                     }
-                });
+                }
         }
 
         waitForMotor(wheels.get(0));
 
-        wheels.forEach(wheel -> {
+        for (Motor wheel : wheels) {
             wheel.stopMotor();
             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        });
+        }
 
     }
 
@@ -297,10 +297,10 @@ public class TeamRobot {
         // https://www.roboteq.com/images/article-images/frontpage/wheel-rotations.jpg
         switch(tDirection) {
             case LEFT:
-                wheels.forEach(wheel -> {
-                    switch(wheel.getWheelType()) {
+                for (Motor wheel : wheels) {
+                    switch (wheel.getWheelType()) {
                         case BACK_LEFT:
-                            wheel.set(power*-1);
+                            wheel.set(power * -1);
                             wheel.getTicker().setTargetPos(ticks);
                             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
                         case BACK_RIGHT:
@@ -312,9 +312,9 @@ public class TeamRobot {
                             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                             wheel.set(0);
                     }
-                });
+                }
             case RIGHT:
-                wheels.forEach(wheel -> {
+                for(Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case BACK_LEFT:
                             wheel.set(power);
@@ -329,23 +329,23 @@ public class TeamRobot {
                             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                             wheel.set(0);
                     }
-                });
+                }
         }
 
         waitForMotor(wheels.get(0));
 
-        wheels.forEach(wheel -> {
+        for (Motor wheel : wheels) {
             wheel.stopMotor();
             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        });
+        }
 
     }
 
     public void diagonalDrive(DiagonalDirection dDirection, int ticks, double power) {
         switch(dDirection) {
             case LEFT_FORWARD:
-                wheels.forEach(wheel -> {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_RIGHT:
@@ -357,9 +357,9 @@ public class TeamRobot {
                             wheel.getTicker().setTargetPos(ticks);
                             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
                     }
-                });
+                }
             case RIGHT_FORWARD:
-                wheels.forEach(wheel ->  {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_RIGHT:
@@ -371,9 +371,10 @@ public class TeamRobot {
                             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                             wheel.set(0);
                     }
-                });
+
+                }
             case LEFT_BACKWARD:
-                wheels.forEach(wheel -> {
+                for (Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_RIGHT:
@@ -385,9 +386,9 @@ public class TeamRobot {
                             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
                             wheel.set(0);
                     }
-                });
+                }
             case RIGHT_BACKWARD:
-                wheels.forEach(wheel ->  {
+                for(Motor wheel : wheels) {
                     switch(wheel.getWheelType()) {
                         case FRONT_LEFT:
                         case BACK_RIGHT:
@@ -399,17 +400,16 @@ public class TeamRobot {
                             wheel.getTicker().setTargetPos(ticks);
                             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
                     }
-                });
-
+                }
         }
 
         waitForMotor(wheels.get(0));
 
-        wheels.forEach(wheel -> {
+        for (Motor wheel : wheels) {
             wheel.stopMotor();
             wheel.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        });
+        }
 
     }
 
@@ -417,7 +417,7 @@ public class TeamRobot {
         return robotVision;
     }
 
-    public ArrayList<REVMotor> getWheels() {
+    public ArrayList<Motor> getWheels() {
         return wheels;
     }
 }

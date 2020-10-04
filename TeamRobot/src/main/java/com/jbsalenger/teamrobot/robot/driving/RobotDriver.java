@@ -1,19 +1,20 @@
 package com.jbsalenger.teamrobot.robot.driving;
 
+import com.jbsalenger.teamrobot.robot.motors.Motor;
 import com.jbsalenger.teamrobot.robot.motors.REVMotor;
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class RobotDriver {
-    ArrayList<REVMotor> wheels = new ArrayList<>();
+    ArrayList<Motor> wheels = new ArrayList<>();
 
-    public RobotDriver(REVMotor... _wheels) {
+    public RobotDriver(Motor... _wheels) {
         wheels.addAll(Arrays.asList(_wheels));
     }
 
 
     public void drive(float powerFL, float powerFR, float powerBL, float powerBR) {
-        wheels.forEach(wheel -> {
+        for (Motor wheel : wheels) {
             switch(wheel.getWheelType()) {
                 case FRONT_LEFT:
                     wheel.set(powerFL);
@@ -24,12 +25,12 @@ public class RobotDriver {
                 case BACK_RIGHT:
                     wheel.set(powerBR);
             }
-        });
+        }
     }
 
     // This function is to be used in the driver controlled TeleOP, it does not require Ticks
     public void driveHorizontal(float powerFL, float powerFR) {
-        wheels.forEach(wheel -> {
+        for (Motor wheel : wheels) {
             switch(wheel.getWheelType()) {
                 case FRONT_LEFT:
                 case BACK_RIGHT:
@@ -38,6 +39,6 @@ public class RobotDriver {
                 case BACK_LEFT:
                     wheel.set(powerFR);
             }
-        });
+        }
     }
 }
