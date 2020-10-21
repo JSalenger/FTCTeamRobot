@@ -1,5 +1,6 @@
 package com.jbsalenger.teamrobot;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -15,6 +16,7 @@ import java.util.List;
  */
 
 @TeleOp(name="Test: Object Recognition", group="Linear Opmode")
+@Disabled
 public class TestObjectRecognition extends LinearOpMode {
 
     // Declare OpMode members.
@@ -22,8 +24,7 @@ public class TestObjectRecognition extends LinearOpMode {
     private final REVMotor front_right = new REVMotor(null, 1, WheelType.FRONT_RIGHT);
     private final REVMotor back_left = new REVMotor(null, 1, WheelType.BACK_LEFT);
     private final REVMotor back_right = new REVMotor(null, 1, WheelType.BACK_RIGHT);
-    private TeamRobot robot = new TeamRobot(hardwareMap, "", "",
-            new String[]{"Skystone", "Stone"}, front_left, front_right, back_left, back_right);
+    private TeamRobot robot = new TeamRobot(hardwareMap.appContext, "", front_left, front_right, back_left, back_right);
 
     @Override
     public void runOpMode() {

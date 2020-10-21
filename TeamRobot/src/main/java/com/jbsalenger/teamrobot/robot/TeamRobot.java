@@ -1,5 +1,7 @@
 package com.jbsalenger.teamrobot.robot;
 
+import android.content.Context;
+
 import com.jbsalenger.teamrobot.robot.motors.Motor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -19,45 +21,116 @@ public class TeamRobot {
 
     // TODO: ADD JAVADOC COMMENTS TO METHODS AND CLASS
     ArrayList<Motor> wheels = new ArrayList<>();
-    RobotVision robotVision;
-
-    public TeamRobot(HardwareMap hMap, String KEY, String TFOD_MODEL_ASSET_PATH, String[] LABELS, Motor... _wheels) {
-        /**
-         * Constructor:
-         * @param hMap hardware map from OpMode
-         * @param KEY Vuforia key
-         * @param TFOD_MODEL_ASSET_PATH tfod model file name
-         * @param LABELS array of label names
-         * @param _wheels wheels in the form of var args
-         *
-         * Constructor for the TeamRobot Class
-         */
+    RobotVision robotVision = null;
 
 
-        // TODO: TEST IF WE CAN ALSO ADD Gamepad OBJECT TO CONSTRUCTOR
-        wheels.addAll(Arrays.asList(_wheels));
-        robotVision = new RobotVision(hMap, KEY, TFOD_MODEL_ASSET_PATH, LABELS);
+
+    /**
+     * Constructor: all params
+     * Leave key string empty ( "" ) to skip vuforia init
+     * If vuforia init is skipped, then other vuforia specific arguments (TFOD_MODEL_ASSET_PATH, LABELS, context,  and hMap)
+     * may be left as null, KEY must still hold a value, however
+     * @param context
+     * @param KEY
+     * @param TFOD_MODEL_ASSET_PATH
+     * @param LABELS
+     * @param motors
+     */
+
+    public TeamRobot(Context context, String KEY, String TFOD_MODEL_ASSET_PATH, String[] LABELS, Motor... motors) {
+        wheels.addAll(Arrays.asList(motors));
+
+        if(!(KEY.equals(""))) {
+            robotVision = new RobotVision(context, KEY, TFOD_MODEL_ASSET_PATH, LABELS);
+        }
     }
 
-    public TeamRobot(HardwareMap hMap, String KEY, String TFOD_MODEL_ASSET_PATH, String[] LABELS, int ticksPerRotation, String[] motorNames) {
+    /**
+     * Constructor: all params except for yearly vuforia ones
+     * Similar to all param constructor except missing TFOD_MODEL_ASSET_PATH and LABELS, these are set by default in the constructor
+     * to that years information. ( Ex. 2020-2021 => TFOD_MODEL_ASSET_PATH = "UltimateGoal.tflite" )
+     * @param context
+     * @param KEY
+     * @param motors
+     */
+
+    public TeamRobot(Context context, String KEY, Motor... motors) {
+        wheels.addAll(Arrays.asList(motors));
+        robotVision = new RobotVision(context, KEY, "UltimateGoal.tflite", new String[]{"Quad", "Single"});
+    }
+
+    /**
+     * Constructor: strings, for motor names, instead of motor objects
+     * Motors will be constructed using the motorName strings provided,
+     * They will be of type REVMotor which implements the Motor interface
+     *
+     * Leave key string empty ( "" ) to skip vuforia init
+     * hMap may not be left as null during vuforia init skip
+     * @param hMap
+     * @param context
+     * @param KEY
+     * @param TFOD_MODEL_ASSET_PATH
+     * @param LABELS
+     * @param ticksPerRotation
+     * @param motorNames
+     */
+
+    public TeamRobot(HardwareMap hMap, Context context, String KEY, String TFOD_MODEL_ASSET_PATH, String[] LABELS, int ticksPerRotation, String... motorNames) {
         REVMotor fl = new REVMotor(hMap.dcMotor.get(motorNames[0]), ticksPerRotation, WheelType.FRONT_LEFT);
-        REVMotor fr = new REVMotor(hMap.dcMotor.get(motorNames[0]), ticksPerRotation, WheelType.FRONT_LEFT);
-        REVMotor bl = new REVMotor(hMap.dcMotor.get(motorNames[0]), ticksPerRotation, WheelType.FRONT_LEFT);
-        REVMotor br = new REVMotor(hMap.dcMotor.get(motorNames[0]), ticksPerRotation, WheelType.FRONT_LEFT);
+        REVMotor fr = new REVMotor(hMap.dcMotor.get(motorNames[1]), ticksPerRotation, WheelType.FRONT_RIGHT);
+        REVMotor bl = new REVMotor(hMap.dcMotor.get(motorNames[2]), ticksPerRotation, WheelType.BACK_LEFT);
+        REVMotor br = new REVMotor(hMap.dcMotor.get(motorNames[3]), ticksPerRotation, WheelType.BACK_RIGHT);
 
         wheels.addAll(Arrays.asList(fl, fr, bl, br));
-        robotVision = new RobotVision(hMap, KEY, TFOD_MODEL_ASSET_PATH, LABELS);
+
+        if(!(KEY.equals(""))) {
+            robotVision = new RobotVision(context, KEY, TFOD_MODEL_ASSET_PATH, LABELS);
+        }
     }
 
-    public TeamRobot(HardwareMap hMap, String KEY, String TFOD_MODEL_ASSET_PATH, String[] LABELS, int ticksPerRotation) {
+    /**
+     * Constructor: all params except for motor names
+     * Motor names are assumed to be frontLeft, frontRight, backLeft, backRight
+     * Leave key string empty ( "" ) to skip vuforia init
+     * hMap may not be left as null during vuforia init skip
+     * @param hMap
+     * @param context
+     * @param KEY
+     * @param TFOD_MODEL_ASSET_PATH
+     * @param LABELS
+     * @param ticksPerRotation
+     */
+
+    public TeamRobot(HardwareMap hMap, Context context, String KEY, String TFOD_MODEL_ASSET_PATH, String[] LABELS, int ticksPerRotation) {
         REVMotor fl = new REVMotor(hMap.dcMotor.get("frontLeft"), ticksPerRotation, WheelType.FRONT_LEFT);
         REVMotor fr = new REVMotor(hMap.dcMotor.get("frontRight"), ticksPerRotation, WheelType.FRONT_LEFT);
         REVMotor bl = new REVMotor(hMap.dcMotor.get("backLeft"), ticksPerRotation, WheelType.FRONT_LEFT);
         REVMotor br = new REVMotor(hMap.dcMotor.get("backRight"), ticksPerRotation, WheelType.FRONT_LEFT);
 
         wheels.addAll(Arrays.asList(fl, fr, bl, br));
-        robotVision = new RobotVision(hMap, KEY, TFOD_MODEL_ASSET_PATH, LABELS);
+
+        if(!(KEY.equals(""))) {
+            robotVision = new RobotVision(context, KEY, TFOD_MODEL_ASSET_PATH, LABELS);
+        }
     }
+
+    /**
+     * Constructor: only param is ticksPerRotation,
+     * Does not init vuforia
+     * @param hMap
+     * @param ticksPerRotation
+     */
+
+    public TeamRobot(HardwareMap hMap, int ticksPerRotation) {
+        REVMotor fl = new REVMotor(hMap.dcMotor.get("frontLeft"), ticksPerRotation, WheelType.FRONT_LEFT);
+        REVMotor fr = new REVMotor(hMap.dcMotor.get("frontRight"), ticksPerRotation, WheelType.FRONT_LEFT);
+        REVMotor bl = new REVMotor(hMap.dcMotor.get("backLeft"), ticksPerRotation, WheelType.FRONT_LEFT);
+        REVMotor br = new REVMotor(hMap.dcMotor.get("backRight"), ticksPerRotation, WheelType.FRONT_LEFT);
+
+        wheels.addAll(Arrays.asList(fl, fr, bl, br));
+    }
+
+
 
     // TODO: ADD ONE FINAL CONSTRUCTOR THAT USES THE TF DEFAULTS FOR THE ULTIMATE GOAL SEASON
 

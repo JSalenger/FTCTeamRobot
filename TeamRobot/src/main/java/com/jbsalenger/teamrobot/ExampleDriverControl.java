@@ -1,5 +1,6 @@
 package com.jbsalenger.teamrobot;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -15,6 +16,7 @@ import com.jbsalenger.teamrobot.robot.motors.REVMotor;
  */
 
 @TeleOp(name="Example: Driver Controlled", group="Linear Opmode")
+@Disabled
 public class ExampleDriverControl extends LinearOpMode {
 
     // Declare OpMode members.

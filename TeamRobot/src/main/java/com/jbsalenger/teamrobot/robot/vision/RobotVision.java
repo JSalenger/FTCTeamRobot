@@ -30,6 +30,8 @@
 package com.jbsalenger.teamrobot.robot.vision;
 
 
+import android.content.Context;
+
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -42,18 +44,16 @@ import java.util.List;
 public class RobotVision {
 
 
-    private final String TFOD_MODEL_ASSET;
-    private final String[] TFOD_LABELS;
-    private boolean startTF_has_been_run = false;
-    private boolean startVuforia_has_been_run = false;
+    private String TFOD_MODEL_ASSET;
+    private String[] TFOD_LABELS;
     private int tfod_mv_id;
-    private HardwareMap hardwareMap;
-    private final String VUFORIA_KEY;
+    private String VUFORIA_KEY;
     private VuforiaLocalizer vuforia;
     private TFObjectDetector tfod;
+    private Context context;
 
-    public RobotVision(HardwareMap hMap, String KEY, String TFOD_MODEL_ASSET_PATH, String... LABELS) {
-        hardwareMap = hMap;
+    public RobotVision(Context ctx, String KEY, String TFOD_MODEL_ASSET_PATH, String... LABELS) {
+        context = ctx;
         VUFORIA_KEY = KEY;
         TFOD_LABELS = LABELS;
         TFOD_MODEL_ASSET = TFOD_MODEL_ASSET_PATH;
@@ -68,8 +68,8 @@ public class RobotVision {
         /*
          * Create TensorFlow detection engine instance.
          */
-        tfod_mv_id = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        tfod_mv_id = context.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", context.getPackageName());
 
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfod_mv_id);
         tfodParameters.minResultConfidence = 0.8f;
