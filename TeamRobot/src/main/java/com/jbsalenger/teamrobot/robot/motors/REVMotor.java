@@ -42,6 +42,11 @@ public class REVMotor implements Motor {
     }
 
     @Override
+    public void resetTicker() {
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+
+    @Override
     public void setZeroPowerBehavior(DcMotor.ZeroPowerBehavior zeroPowerBehavior) {
         motor.setZeroPowerBehavior(zeroPowerBehavior);
     }

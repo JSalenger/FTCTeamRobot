@@ -140,111 +140,58 @@ public class TeamRobot {
         return;
     }
 
-    public void driveStraight(int ticks, double power) {
-        for (Motor wheel : wheels) {
-            wheel.getTicker().setTargetPos(ticks);
-            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-            wheel.set(power);
+    public void drive(double fl, double fr, double bl, double br, int ticks) {
+        for(Motor motor : wheels) {
+            switch(motor.getWheelType()) {
+                case FRONT_LEFT:
+                    motor.getTicker().setTargetPos(ticks);
+                    motor.set(fl);
+                    motor.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+                case FRONT_RIGHT:
+                    motor.getTicker().setTargetPos(ticks);
+                    motor.set(fr);
+                    motor.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+                case BACK_LEFT:
+                    motor.getTicker().setTargetPos(ticks);
+                    motor.set(bl);
+                    motor.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+                case BACK_RIGHT:
+                    motor.getTicker().setTargetPos(ticks);
+                    motor.set(br);
+                    motor.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
+            }
         }
 
-        // TODO: TEST THAT THIS IS STABLE THIS IS NOT HOW THE LIBRARY IS MEANT TO BE USED
-        // TEST IF THIS FAILS TEST THE CONDITION WITHOUT THE !
-        //Awaitility.await().until(() -> !(wheels.get(0).getTicker().getIsBusy()));
         waitForMotor(wheels.get(0));
 
-        for (Motor wheel : wheels) {
-            wheel.stopMotor();
-            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        for(Motor motor : wheels) {
+            motor.resetTicker();
+            motor.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
         }
+    }
+
+    public void driveStraight(int ticks, double power) {
+        drive(power, power, power, power, ticks);
     }
 
     public void driveHorizontal(HorizontalDirection hDirection, int ticks, double power) {
         // https://www.roboteq.com/images/article-images/frontpage/wheel-rotations.jpg
         switch(hDirection) {
             case LEFT:
-                for (Motor wheel : wheels) {
-                    switch(wheel.getWheelType()) {
-                        case FRONT_LEFT:
-                        case BACK_RIGHT:
-                            wheel.set(power*-1);
-                            wheel.getTicker().setTargetPos(ticks);
-                            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        case FRONT_RIGHT:
-                        case BACK_LEFT:
-                            wheel.set(power);
-                            wheel.getTicker().setTargetPos(ticks);
-                            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    }
-                }
+                drive(power * -1, power, power * -1, power, ticks);
             case RIGHT:
-                for (Motor wheel : wheels) {
-                    switch(wheel.getWheelType()) {
-                        case FRONT_LEFT:
-                        case BACK_RIGHT:
-                            wheel.set(power);
-                            wheel.getTicker().setTargetPos(ticks);
-                            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        case FRONT_RIGHT:
-                        case BACK_LEFT:
-                            wheel.set(power*-1);
-                            wheel.getTicker().setTargetPos(ticks);
-                            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    }
-                }
+                drive(power, power * -1, power, power * -1, ticks);
         }
-
-        //Awaitility.await().until(() -> !(wheels.get(0).getTicker().getIsBusy()));
-        waitForMotor(wheels.get(0));
-
-        for (Motor wheel : wheels) {
-            wheel.stopMotor();
-            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-
     }
 
     public void turnOnCenter(HorizontalDirection tDirection, int ticks, double power) {
         // https://www.roboteq.com/images/article-images/frontpage/wheel-rotations.jpg
         switch(tDirection) {
             case LEFT:
-                for (Motor wheel : wheels) {
-                    switch (wheel.getWheelType()) {
-                        case FRONT_LEFT:
-                        case BACK_LEFT:
-                            wheel.set(power * -1);
-                            wheel.getTicker().setTargetPos(ticks);
-                            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        case FRONT_RIGHT:
-                        case BACK_RIGHT:
-                            wheel.set(power);
-                            wheel.getTicker().setTargetPos(ticks);
-                            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    }
-                }
+                drive(power * -1, power, power * -1, power, ticks);
             case RIGHT:
-                for (Motor wheel : wheels) {
-                    switch(wheel.getWheelType()) {
-                        case FRONT_LEFT:
-                        case BACK_LEFT:
-                            wheel.set(power);
-                            wheel.getTicker().setTargetPos(ticks);
-                            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-                        case FRONT_RIGHT:
-                        case BACK_RIGHT:
-                            wheel.set(power*-1);
-                            wheel.getTicker().setTargetPos(ticks);
-                            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_TO_POSITION);
-                    }
-                }
+                drive(power, power * -1, power, power * -1, ticks);
         }
-
-        waitForMotor(wheels.get(0));
-
-        for (Motor wheel : wheels) {
-            wheel.stopMotor();
-            wheel.getTicker().setRunMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        }
-
     }
 
     public void turnOnCorners(Corner corner, int ticks, double power) {

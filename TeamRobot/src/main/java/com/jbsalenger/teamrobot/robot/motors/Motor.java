@@ -32,6 +32,11 @@ public interface Motor {
     public void stopMotor();
 
     /**
+     * Resets the ticker
+     */
+    public void resetTicker();
+
+    /**
      * Disable the motor.
      */
     public void disable();
